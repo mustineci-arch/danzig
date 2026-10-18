@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Danzig Reiseführer</title>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+/* Layout: Handy-App mit fester Navigation unten. Vier Reisetage als Zeitleiste, Budget, Verkehr und Checklisten. Farben aus Ostsee, Backstein und Bernstein. */
+:root{
+  --bg:#EBF0F1; --surface:#FFFFFF; --ink:#14262E; --muted:#4F646D; --line:#CBD6DA;
+  --deep:#17394A; --on-deep:#F2F7F8; --primary:#1F5568; --on-primary:#FFFFFF;
+  --amber:#E3A62F; --amber-bg:#FBEFD2; --amber-ink:#6B4300;
+  --brick:#9A3B2B; --warn-bg:#F8E4DF; --ok:#1F7A4F; --ok-bg:#DCEFE5; --chip:#DDE7EA;
+  --f-display:'Bricolage Grotesque','Trebuchet MS',system-ui,sans-serif;
+  --f-body:'Source Sans 3',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --f-mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E1B21; --surface:#162830; --ink:#E5EDEF; --muted:#9BB0B8; --line:#2A424C;
+  --deep:#0A141A; --on-deep:#EAF2F4; --primary:#74B6CA; --on-primary:#0E1B21;
+  --amber:#E8B04A; --amber-bg:#3A2D14; --amber-ink:#F0CF8C;
+  --brick:#EE9482; --warn-bg:#3C2420; --ok:#6CCB9B; --ok-bg:#15332A; --chip:#223A44; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E1B21; --surface:#162830; --ink:#E5EDEF; --muted:#9BB0B8; --line:#2A424C;
+  --deep:#0A141A; --on-deep:#EAF2F4; --primary:#74B6CA; --on-primary:#0E1B21;
+  --amber:#E8B04A; --amber-bg:#3A2D14; --amber-ink:#F0CF8C;
+  --brick:#EE9482; --warn-bg:#3C2420; --ok:#6CCB9B; --ok-bg:#15332A; --chip:#223A44; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 var(--f-body);padding-bottom:88px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--deep);z-index:10}
+.in{max-width:680px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--primary)}
+h1,h2,h3{font-family:var(--f-display);margin:0;text-wrap:balance;line-height:1.15}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+
+header{background:var(--deep);color:var(--on-deep);padding-block:22px 20px}
+header .kicker{font:500 12px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;opacity:.8}
+header h1{font-size:2.1rem;font-weight:800;margin-top:10px}
+header p{margin:6px 0 0;opacity:.88}
+.count{display:inline-block;margin-top:14px;background:var(--amber);color:#2B1B00;font:600 14px/1 var(--f-body);padding:8px 12px;border-radius:6px}
+
+main{padding-block:18px 8px}
+.view{display:flex;flex-direction:column;gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.card h2{font-size:1.15rem;margin-bottom:8px}
+.card h3{font-size:1rem;margin-bottom:4px}
+.muted{color:var(--muted)}
+.small{font-size:.9rem}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{font:600 15px/1 var(--f-body);background:var(--primary);color:var(--on-primary);border:0;border-radius:8px;padding:12px 14px;text-decoration:none;display:inline-flex;align-items:center;min-height:44px;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--primary);border:1px solid var(--primary)}
+.btn:focus-visible,.tab:focus-visible,.nav button:focus-visible,input:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+dl.kv{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 14px}
+dl.kv dt{color:var(--muted);font-size:.9rem}
+dl.kv dd{margin:0;min-width:0;overflow-wrap:anywhere}
+
+.tabs{display:flex;gap:6px;overflow-x:auto}
+.tab{flex:1 0 auto;min-width:76px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px 10px;text-align:left;font:inherit;cursor:pointer}
+.tab b{display:block;font:600 15px/1.2 var(--f-display)}
+.tab span{font:400 12px/1.3 var(--f-mono);color:var(--muted)}
+.tab[aria-selected="true"]{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
+.tab[aria-selected="true"] span{color:var(--on-primary);opacity:.85}
+
+.dayhead h2{font-size:1.5rem;font-weight:800}
+.wx{display:inline-block;margin-top:8px;background:var(--chip);border-radius:6px;padding:4px 10px;font-size:.92rem}
+ol.tl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.it{display:grid;grid-template-columns:58px 1fr;gap:12px;padding:10px 0;border-top:1px solid var(--line)}
+.it:first-child{border-top:0}
+.it time{font:500 14px/1.6 var(--f-mono);color:var(--primary)}
+.it .t{font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:3px}
+.chip{font:500 11px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;background:var(--chip);color:var(--muted);padding:4px 6px;border-radius:4px}
+.chip.essen{background:var(--amber-bg);color:var(--amber-ink)}
+.chip.cost{background:var(--ok-bg);color:var(--ok)}
+.chip.opt{background:transparent;border:1px dashed var(--muted)}
+.check{margin-top:6px;background:var(--warn-bg);color:var(--ink);border-radius:6px;padding:6px 10px;font-size:.9rem}
+.check b{color:var(--brick)}
+.alt{background:var(--amber-bg);color:var(--ink)}
+.alt h3{color:var(--amber-ink)}
+
+table{width:100%;border-collapse:collapse}
+th,td{padding:9px 6px;border-top:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums}
+th:first-child,td:first-child{text-align:left}
+thead th{border-top:0;font:500 12px/1.2 var(--f-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+tfoot td{font-weight:700;border-top:2px solid var(--ink)}
+.tw{overflow-x:auto}
+input[type=number]{font:inherit;width:96px;padding:8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)}
+
+.ck{display:flex;gap:12px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--line);cursor:pointer}
+.ck:first-of-type{border-top:0}
+.ck input{width:22px;height:22px;margin:1px 0 0;accent-color:var(--primary);flex:none}
+.ck span{min-width:0}
+.ck input:checked + span{text-decoration:line-through;color:var(--muted)}
+.prog{font:500 12px/1 var(--f-mono);color:var(--muted)}
+
+.it a.t{color:var(--ink);text-decoration:underline;text-decoration-color:var(--line);text-decoration-thickness:2px;text-underline-offset:3px}
+.way{margin-top:3px;font:500 13px/1.4 var(--f-mono);color:var(--primary)}
+.meal{margin-top:8px;border:1px solid var(--line);border-radius:8px;padding:0 12px}
+.meal summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-weight:600;color:var(--primary)}
+.opt{border-top:1px solid var(--line);padding:10px 0;display:flex;flex-direction:column;gap:2px}
+.opt .oh{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.go{display:inline-flex;align-items:center;min-height:40px;margin-top:8px;padding:0 12px;border-radius:8px;background:var(--chip);color:var(--primary);border:1px solid var(--line);font:600 14px/1 var(--f-body);text-decoration:none}
+.next{background:var(--amber-bg)}
+.next .chip{background:var(--amber);color:#2B1B00}
+.nav{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);z-index:5;
+  padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
+.nav div{max-width:680px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+.nav button{background:transparent;border:0;color:var(--muted);font:600 12px/1.2 var(--f-body);padding:10px 2px;border-radius:8px;min-height:48px;cursor:pointer}
+.nav button[aria-current="page"]{background:var(--chip);color:var(--ink)}
+@media (prefers-reduced-motion:no-preference){.view{animation:in .18s ease-out}@keyframes in{from{opacity:.4;transform:translateY(4px)}to{opacity:1;transform:none}}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="in">
+    <div class="kicker">20.–23. Oktober 2026 · Gdańsk</div>
+    <h1>Danzig Reiseführer</h1>
+    <p>3 Erwachsene, 1 Kind (12) · gemütlich, mit Pausen</p>
+    <div class="count" id="count">…</div>
+  </div>
+</header>
+
+<main class="in">
+  <section class="view" id="v-start"></section>
+  <section class="view" id="v-tage" hidden></section>
+  <section class="view" id="v-verkehr" hidden></section>
+  <section class="view" id="v-budget" hidden></section>
+  <section class="view" id="v-check" hidden></section>
+</main>
+
+<nav class="nav" aria-label="Hauptnavigation"><div>
+  <button data-tab="start">Start</button>
+  <button data-tab="tage">Tage</button>
+  <button data-tab="verkehr">Verkehr</button>
+  <button data-tab="budget">Budget</button>
+  <button data-tab="check">Listen</button>
+</div></nav>
+
+<script>
+const MAPS = 'https://www.google.com/maps/dir/?api=1';
+const ADDR = 'Pszenna 3, 80-749 Gdańsk';
+const TYPES = {flug:'Flug',taxi:'Taxi',pause:'Pause',weg:'Zu Fuß',sehen:'Sehen',essen:'Essen',bahn:'SKM',frei:'Frei'};
+
+const DAYS = [
+ { id:'di', short:'Di', date:'20.10.', iso:'2026-10-20', title:'Anreise und Altstadt',
+   wx:'10–12 °C, bewölkt, abends Regen möglich. Sonnenuntergang gegen 17:30.',
+   transport:'Taxi oder Bolt vom Flughafen, danach alles zu Fuß.', budget:[330,570],
+   budgetNote:'Flughafentransfer, Abendessen und Imbiss nach dem Check-in (Imbiss von mir geschätzt, 60–120 PLN)',
+   items:[
+    {t:'12:50',k:'flug',h:'Landung am Flughafen Danzig'},
+    {t:'13:20',k:'weg',h:'Gepäck holen, Flughafen verlassen'},
+    {t:'13:40',k:'taxi',h:'Fahrt zur Unterkunft Pszenna 3',w:'Fahrzeit ca. 25–40 Min.',p:'Pszenna 3 Gdansk',m:'driving',n:'Etwa 40 Minuten. Taxi, Bolt oder Uber.'},
+    {t:'14:20',k:'pause',h:'Check-in und ausruhen'},
+    {t:'14:40',k:'essen',h:'Imbiss nach dem Check-in',meal:'di-imbiss',n:'Das Abendessen ist erst um 17:30. Wählen Sie etwas Leichtes, zum Beispiel eine Suppe oder eine kleine Portion Pierogi.',cost:'ca. 60–120 PLN (Schätzung)'},
+    {t:'15:30',k:'sehen',h:'Speicherinsel (Wyspa Spichrzów)',p:'Wyspa Spichrzów Gdańsk',m:'walking',n:'Die Unterkunft liegt selbst auf der Speicherinsel. Der Weg ist kurz.'},
+    {t:'15:45',k:'sehen',h:'Grüne Brücke (Zielony Most)',w:'Weg ca. 5 Min. zu Fuß',p:'Zielony Most Gdańsk',m:'walking',n:'Blick auf die Mottlau.'},
+    {t:'16:00',k:'sehen',h:'Neptunbrunnen',w:'Weg ca. 4 Min. zu Fuß',p:'Fontanna Neptuna Gdańsk',m:'walking',n:'Eines der bekanntesten Wahrzeichen Danzigs.'},
+    {t:'16:20',k:'sehen',h:'Langer Markt (Długi Targ)',w:'Weg ca. 1 Min. zu Fuß',p:'Długi Targ Gdańsk',m:'walking',n:'Bunte historische Fassaden.'},
+    {t:'16:40',k:'sehen',h:'Langgasse, Rathaus, Goldenes Tor',w:'Weg bis zum Goldenen Tor ca. 8 Min. zu Fuß',p:'Złota Brama Gdańsk',m:'walking'},
+    {t:'17:30',k:'essen',h:'Abendessen: Restauracja Gdańska',meal:'di-abend',p:'Restauracja Gdańska Świętego Ducha 16/24 Gdańsk',m:'walking',n:'Świętego Ducha 16/24. 220–320 PLN für 4 Personen mit Getränken.',lab:'Hinweis.',chk:'Der Plan nennt Piwna 9/10. Das ist laut Google Maps das Restaurant KOS. Die Restauracja Gdańska liegt in der Świętego Ducha 16/24.',cost:'220–320 PLN'},
+    {t:'19:00',k:'frei',h:'Hafenpromenade, beleuchtet',p:'Długie Pobrzeże Gdańsk',m:'walking',n:'Nur bei wenig Regen.',opt:true}
+   ],
+   alt:'Bei Regen die Altstadt verkürzen und länger beim Abendessen bleiben. Die Promenade am Abend entfällt.',
+   maps:[['Route Altstadt (zu Fuß)',MAPS+'&origin=Pszenna+3+Gdansk&destination=Dlugie+Pobrzeze+Gdansk&waypoints=Zielony+Most+Gdansk%7CFontanna+Neptuna+Gdansk%7CZlota+Brama+Gdansk&travelmode=walking']],
+   todo:'Tisch für Dienstag 17:30 reservieren, 4 Personen.' },
+
+ { id:'mi', short:'Mi', date:'21.10.', iso:'2026-10-21', title:'Marienkirche, Frauengasse, Sołdek, Krantor',
+   wx:'Bis etwa 15 °C, zeitweise sonnig, abends Regen möglich.',
+   transport:'Alles zu Fuß.', budget:[360,560], budgetNote:'Frühstück, Café, Mittag, Abendessen, Sołdek (86 PLN)',
+   items:[
+    {t:'09:00',k:'essen',h:'Frühstück nahe der Unterkunft'},
+    {t:'10:00',k:'weg',h:'Spaziergang zur Marienkirche',w:'Weg ca. 8 Min. zu Fuß über die Grüne Brücke',p:'Bazylika Mariacka Gdańsk',m:'walking'},
+    {t:'10:15',k:'sehen',h:'Marienkirche (Bazylika Mariacka)',p:'Bazylika Mariacka Gdańsk',m:'walking',n:'Eine der größten Backsteinkirchen der Welt. Optional Turm mit 408 Stufen, kostenpflichtig und wetterabhängig.',
+      chk:'Öffnung werktags laut älterer Angabe 8:30–17:30. Turmpreise und Zeiten vor Ort klären.'},
+    {t:'10:45',k:'sehen',h:'Frauengasse (Ulica Mariacka)',w:'Weg ca. 2 Min. zu Fuß',p:'Ulica Mariacka Gdańsk',m:'walking',n:'Historische Häuser und Bernsteingeschäfte. Kostenlos.'},
+    {t:'11:15',k:'essen',h:'Café-Pause',meal:'mi-cafe',n:'Kaffee, Tee oder heiße Schokolade.'},
+    {t:'12:00',k:'essen',h:'Mittagessen, gern mit Pierogi',meal:'mi-mittag',n:'Richtwert laut Plan: Pierogi 10 Stück ca. 42–44 PLN, Suppen ca. 17 PLN. Für 4 Personen etwa 180–260 PLN.',cost:'180–260 PLN'},
+    {t:'13:15',k:'sehen',h:'Museumsschiff Sołdek',p:'Sołdek Gdańsk',m:'walking',n:'Mi 13:00–17:00, letzter Einlass 16:00. 3 Erwachsene × 23 PLN + 1 Kind × 17 PLN.',cost:'86 PLN',
+      lab:'Hinweis.',chk:'Bis 31.10. gilt wegen Renovierung eine verkürzte Route, der Aufbau wird ausgelassen. Ob am Mittwoch auch hier der Eintritt frei ist, steht auf der Seite nicht.'},
+    {t:'15:00',k:'sehen',h:'Krantor (Żuraw)',w:'Weg von der Sołdek ca. 10 Min. zu Fuß',p:'Żuraw Gdańsk',m:'walking',n:'Wahrzeichen am Hafen. Mi 13:00–17:00, letzter Einlass 16:00. Eintritt am Mittwoch frei, sonst 23 PLN (Kind 17).',cost:'frei am Mittwoch'},
+    {t:'16:00',k:'pause',h:'Zurück zur Unterkunft, ausruhen',p:'Pszenna 3 Gdansk',m:'walking'},
+    {t:'18:00',k:'essen',h:'Abendessen',meal:'mi-abend'}
+   ],
+   alt:'Bei schlechtem Wetter länger im Nationalen Maritimen Museum bleiben oder mehr Zeit im Café einplanen.',
+   maps:[['Route Marienkirche bis Krantor (zu Fuß)',MAPS+'&origin=Pszenna+3+Gdansk&destination=Zuraw+Gdansk&waypoints=Bazylika+Mariacka+Gdansk%7CUlica+Mariacka+Gdansk%7CSoldek+Gdansk&travelmode=walking']],
+   todo:'Mittwoch-Zeiten sind bestätigt. Kurz vor dem Besuch auf nmm.pl nach Sperrungen sehen.' },
+
+ { id:'do', short:'Do', date:'22.10.', iso:'2026-10-22', title:'Oliwa und Ostsee in Sopot',
+   wx:'11–13 °C, überwiegend trocken, nachmittags zeitweise sonnig. Am Meer windig.',
+   transport:'SKM-Bahn und zu Fuß.', budget:[620,880],
+   budgetNote:'Frühstück 100–150, Bahn bis 102, Mittag 160–230, Café 50–90, Abendessen 200–300 PLN',
+   items:[
+    {t:'09:00',k:'essen',h:'Frühstück'},
+    {t:'09:45',k:'weg',h:'Zu Fuß zum Bahnhof Gdańsk Śródmieście',p:'Gdańsk Śródmieście SKM',m:'walking',lab:'Hinweis.',chk:'Die SKM hält auch in Gdańsk Główny. Nehmen Sie den Bahnhof, der näher an der Unterkunft liegt, und vergleichen Sie beide in Google Maps.'},
+    {t:'10:15',k:'bahn',h:'SKM nach Gdańsk Oliwa',w:'Fahrzeit ca. 15–25 Min.',p:'Gdańsk Oliwa SKM',m:'transit',chk:'Ticketpreis nicht bestätigt. Am Automaten oder in Jakdojade das passende Ticket wählen.'},
+    {t:'10:45',k:'sehen',h:'Oliwa-Park (Park Oliwski)',w:'Vom Bahnhof Oliwa ca. 12–15 Min. zu Fuß',lab:'Hinweis.',chk:'Dieser Fußweg fehlt im Plan. Rechnen Sie mit dem Park ab etwa 11:00 und dem Zug nach Sopot gegen 12:30.',p:'Park Oliwski Gdańsk',m:'walking',n:'Gartenanlage mit Wasserflächen und alten Bäumen. Kostenlos.'},
+    {t:'11:30',k:'sehen',h:'Kathedrale von Oliwa',w:'Weg durch den Park ca. 3–5 Min. zu Fuß',p:'Archikatedra Oliwska Gdańsk',m:'walking',n:'Bekannt für die Orgel. Besichtigung meist kostenlos.',chk:'Orgelkonzert-Zeiten vor Ort erfragen.'},
+    {t:'12:00',k:'bahn',h:'SKM weiter nach Sopot',w:'Zurück zum Bahnhof Oliwa ca. 12–15 Min. zu Fuß, Fahrt ca. 10–15 Min.',p:'Sopot SKM',m:'transit'},
+    {t:'12:30',k:'essen',h:'Mittagessen in Sopot',meal:'do-mittag',cost:'160–230 PLN'},
+    {t:'13:45',k:'sehen',h:'Seebrücke (Molo)',w:'Vom Bahnhof Sopot über Monte Cassino ca. 8–10 Min. zu Fuß',p:'Molo w Sopocie',m:'walking',chk:'Außerhalb der Saison war der Eintritt zuletzt kostenlos (Saison endete am 30.9.). Für 2026 vor Ort prüfen.'},
+    {t:'14:30',k:'sehen',h:'Strand und Ostsee',w:'Weg ca. 2 Min. zu Fuß',p:'Plaża Sopot',m:'walking',n:'Fotos, Wind und Wellen.'},
+    {t:'15:15',k:'weg',h:'Fußgängerstraße Bohaterów Monte Cassino',w:'Von der Seebrücke zum Bahnhof ca. 8–10 Min. zu Fuß',p:'Bohaterów Monte Cassino Sopot',m:'walking',n:'Die Straße führt vom Bahnhof zur Seebrücke. Auf dem Rückweg zum Zug noch einmal entlang, ohne Umweg.'},
+    {t:'16:00',k:'essen',h:'Kaffee, Kuchen oder Eis',meal:'do-kaffee',cost:'50–90 PLN'},
+    {t:'16:30',k:'bahn',h:'SKM zurück nach Danzig',w:'Fahrzeit ca. 15–20 Min.',p:'Gdańsk Śródmieście SKM',m:'transit'},
+    {t:'17:15',k:'pause',h:'Ausruhen in der Unterkunft',p:'Pszenna 3 Gdansk',m:'walking'},
+    {t:'18:30',k:'essen',h:'Abschlussessen: Chleb i Wino',meal:'do-abend',p:'Chleb i Wino Stągiewna 17 Gdańsk',m:'walking',n:'Stągiewna 17, Speicherinsel, ca. 3 Min. von der Unterkunft. Gehobene polnische und internationale Küche.',lab:'Hinweis.',chk:'Im Plan stand Chmielna 10. Google Maps zeigt das Lokal auf der Speicherinsel in der Stągiewna 17. Beim Reservieren die Adresse bestätigen lassen.',cost:'200–300 PLN'}
+   ],
+   alt:'Bei Regen den Strand kürzen, in Sopot Café und Fußgängerstraße verlängern und früher zurückfahren.',
+   maps:[['Oliwa: Park und Kathedrale',MAPS+'&origin=Gdansk+Oliwa+Station&destination=Oliwa+Cathedral&waypoints=Park+Oliwski&travelmode=walking'],
+         ['Sopot: Monte Cassino und Molo',MAPS+'&origin=Sopot+Railway+Station&destination=Sopot+Pier&waypoints=Bohaterow+Monte+Cassino+Sopot&travelmode=walking']],
+   todo:'Tisch für Donnerstag 18:30 im Chleb i Wino reservieren. Taxi für Freitag 06:45 vorbestellen.' },
+
+ { id:'fr', short:'Fr', date:'23.10.', iso:'2026-10-23', title:'Rückflug',
+   wx:'Morgens kühl, etwa 5–8 °C.', transport:'Taxi, Bolt oder Uber zum Flughafen, 25–40 Minuten.', budget:[60,130],
+   budgetNote:'Taxi für 4 Personen mit Gepäck (größeres Fahrzeug bis ca. 130 PLN)',
+   items:[
+    {t:'06:00',k:'pause',h:'Aufstehen'},
+    {t:'06:15',k:'pause',h:'Gepäck prüfen, kleines Frühstück',lab:'Hinweis.',chk:'Bistro Młyn öffnet erst um 7:30 und Chleb i Wino um 8:00, also nach der Abfahrt. Snacks am Vorabend besorgen.'},
+    {t:'06:45',k:'taxi',h:'Taxi an der Pszenna 3',w:'Fahrzeit ca. 25–40 Min.',cost:'60–130 PLN'},
+    {t:'07:15',k:'flug',h:'Ankunft am Flughafen',p:'Gdańsk Lech Wałęsa Airport',m:'driving'},
+    {t:'07:30',k:'flug',h:'Check-in, Gepäckabgabe, Sicherheitskontrolle'},
+    {t:'09:55',k:'flug',h:'Abflug ab Danzig'}
+   ],
+   alt:'Bleibt das Taxi aus, früh eine Bolt- oder Uber-Fahrt bestellen. Spätestens 06:50 losfahren.',
+   maps:[['Route zum Flughafen (Auto)',MAPS+'&origin=Pszenna+3+Gdansk&destination=Gdansk+Lech+Walesa+Airport&travelmode=driving']],
+   todo:'Abholzeit am Donnerstagabend noch einmal bestätigen.' }
+];
+
+const CHECKS = [
+ {g:'Vor der Abreise',i:[
+  ['r1','Dienstag-Abendessen reservieren (Restauracja Gdańska, 17:30)'],
+  ['r2','Donnerstag-Abendessen reservieren (Chleb i Wino, 18:30, 4 Personen)'],
+  ['r3','Taxi für Freitag 06:45 vorbestellen'],
+  ['r4','Öffnungszeiten Sołdek, Krantor, Marienkirche prüfen'],
+  ['r5','Wettervorhersage am Vortag der Abreise prüfen'],
+  ['r6','Offline-Karte von Danzig in Google Maps laden']]},
+ {g:'Dokumente und Geld',i:[
+  ['d1','Ausweise oder Reisepässe aller vier Personen, auch für das Kind'],
+  ['d2','Bordkarten und Buchungsbestätigung der Unterkunft'],
+  ['d3','Europäische Krankenversicherungskarte (Rückseite der Gesundheitskarte)'],
+  ['d4','Ermäßigungsnachweis für das Kind, falls vorhanden'],
+  ['d5','Bankkarte und etwas Bargeld in PLN']]},
+ {g:'Packen',i:[
+  ['p1','Bequeme, wasserfeste Schuhe'],
+  ['p2','Regenjacken und eine warme Schicht, am Meer ist es windig'],
+  ['p3','Mütze und dünne Handschuhe für den Freitagmorgen'],
+  ['p4','Powerbank und Ladekabel, deutsche Stecker passen'],
+  ['p5','Persönliche Medikamente, Snacks für das Kind']]},
+ {g:'Apps',i:[
+  ['a1','Jakdojade für Bus, Tram und Bahn'],
+  ['a2','Bolt oder Uber für Taxifahrten'],
+  ['a3','Übersetzer-App mit Polnisch offline']]}
+];
+
+const VERIFY = [
+ ['SKM-Tickets','Der Plan nennt 8,50 PLN je Fahrt. Gefundene Quellen sind älter und nennen deutlich niedrigere Preise. Eine Quelle sagt, ein Danziger Ticket gelte auch in Sopot, der Plan sagt das Gegenteil. Vor Ort am Automaten klären.'],
+ ['Molo Sopot','Außerhalb der Saison war der Eintritt kostenlos. Für Oktober 2026 nicht bestätigt.'],
+ ['Marienkirche','Werktags 8:30–17:30 laut älterer Angabe. Der Turm ist kostenpflichtig und wetterabhängig.']
+];
+
+const $ = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
+const fmt = n => new Intl.NumberFormat('de-DE',{maximumFractionDigits:0}).format(n);
+const fmt2 = n => new Intl.NumberFormat('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n);
+let store = {};
+try{ store = JSON.parse(localStorage.getItem('danzig-check')||'{}') }catch(e){ store = {} }
+const save = () => { try{ localStorage.setItem('danzig-check',JSON.stringify(store)) }catch(e){} };
+
+function dayIndexForToday(){
+  const d = new Date(); const key = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  return DAYS.findIndex(x=>x.iso===key);
+}
+let cur = Math.max(0,dayIndexForToday());
+
+function countdown(){
+  const now = new Date(); const t0 = new Date(2026,9,20); const t1 = new Date(2026,9,23,23,59);
+  const today0 = new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  const diff = Math.round((t0-today0)/86400000);
+  if(diff>1) return 'Noch '+diff+' Tage bis zur Reise';
+  if(diff===1) return 'Morgen geht es los';
+  if(now<=t1){ const i=dayIndexForToday(); return 'Heute: Tag '+(i+1)+' von 4' }
+  return 'Reise beendet. Schön war es hoffentlich.';
+}
+
+function mapsBtns(list){ return list.map(([l,u])=>`<a class="btn ghost" href="${u}" target="_blank" rel="noopener">${l}</a>`).join('') }
+
+function renderStart(){
+  const li = dayIndexForToday();
+  $('#v-start').innerHTML = `
+  <div class="card"><h2>Reise auf einen Blick</h2>
+   <dl class="kv">
+    <dt>Ankunft</dt><dd>Di 20.10., 12:50, Flughafen Danzig</dd>
+    <dt>Rückflug</dt><dd>Fr 23.10., 09:55 ab Danzig</dd>
+    <dt>Unterkunft</dt><dd>${ADDR}</dd>
+    <dt>Budget</dt><dd>${fmt(DAYS.reduce((a,d)=>a+d.budget[0],0))}–${fmt(DAYS.reduce((a,d)=>a+d.budget[1],0))} PLN für 4 Personen, ohne Flug und Unterkunft</dd>
+   </dl>
+   <div class="row" style="margin-top:12px">
+    <a class="btn" href="https://www.google.com/maps/search/?api=1&query=Pszenna+3+Gdansk" target="_blank" rel="noopener">Unterkunft in Karte</a>
+    <button class="btn ghost" id="copyAddr" type="button">Adresse kopieren</button>
+    ${li>=0?`<button class="btn ghost" type="button" data-go="${li}">Heutiger Tag</button>`:''}
+   </div>
+   <div class="small muted" id="copyMsg" role="status" style="margin-top:6px"></div>
+  </div>
+  <div class="card"><h2>Die vier Tage</h2>
+   ${DAYS.map((d,i)=>`<button class="tab" style="width:100%;margin-bottom:6px" type="button" data-go="${i}"><b>${d.short} ${d.date} · ${d.title}</b><span>${d.items[0].t}–${d.items[d.items.length-1].t} · ${fmt(d.budget[0])}–${fmt(d.budget[1])} PLN</span></button>`).join('')}
+  </div>
+  <div class="card"><h2>Noch zu erledigen</h2>
+   ${DAYS.map(d=>`<p style="margin:0 0 6px"><b>${d.short} ${d.date}</b> · ${d.todo}</p>`).join('')}
+  </div>
+  <div class="card"><h2>Vor der Reise prüfen</h2>
+   <p class="small muted" style="margin-top:0">Diese Angaben aus dem Plan konnte ich nicht sicher bestätigen.</p>
+   ${VERIFY.map(([h,t])=>`<div class="check"><b>${h}.</b> ${t}</div>`).join('<div style="height:6px"></div>')}
+  </div>
+  <div class="card"><h2>Bestätigt am 18.10.2026</h2>
+   <p style="margin:0 0 6px">Mittwoch 21.10.: Sołdek und Krantor öffnen erst um 13:00 und schließen um 17:00, letzter Einlass 16:00. Der Plan mit Sołdek um 13:15 und Krantor um 15:00 passt.</p>
+   <p style="margin:0 0 6px">Eintritt 23 PLN, ermäßigt 17 PLN. Der Krantor ist am Mittwoch kostenlos.</p>
+   <p class="small muted" style="margin:0">Quelle: Webseiten des Nationalen Maritimen Museums (nmm.pl).</p>
+  </div>
+  <div class="card"><h2>Praktisches</h2>
+   <dl class="kv">
+    <dt>Notruf</dt><dd class="mono">112</dd>
+    <dt>Währung</dt><dd>Złoty (PLN). Kartenzahlung ist fast überall möglich.</dd>
+    <dt>Zeit</dt><dd>Wie in Deutschland.</dd>
+    <dt>Handy</dt><dd>EU-Roaming, keine Zusatzkosten.</dd>
+    <dt>Steckdose</dt><dd>Deutsche Stecker passen.</dd>
+   </dl>
+  </div>`;
+  $('#copyAddr').onclick = async ()=>{
+    const m=$('#copyMsg');
+    try{ await navigator.clipboard.writeText(ADDR); m.textContent='Adresse kopiert.' }
+    catch(e){ m.textContent='Kopieren nicht möglich. Adresse: '+ADDR }
+  };
+}
+
+const MEALS = {"di-imbiss": [{"n": "Bistro Młyn", "a": "Pszenna 5", "w": "ca. 1 Min. zu Fuß ab Unterkunft", "h": "täglich 7:30–18:00", "r": "4,6 (4.360)", "d": ["Pizza", "Frühstücksgerichte", "Karpatka-Kuchen", "Kindermenü"], "t": "Direkt nebenan, mit Spielecke. Bei Andrang dauert die Bedienung.", "q": "Bistro Młyn Pszenna 5 Gdańsk", "kid": true}, {"n": "Pierogarnia Stary Młyn Chmielna", "a": "Chmielna 10/UB06", "w": "ca. 4 Min. zu Fuß ab Unterkunft", "h": "8:00–23:00", "r": "4,8 (6.111)", "d": ["Pierogi ruskie", "Pierogi mit Fleisch", "Tomatensuppe", "Żurek"], "t": "Blick auf den Fluss, Gäste loben Preise und Service. Das Lokal am anderen Standort wird laut Seite nach 13:45 leerer.", "q": "Pierogarnia Stary Młyn Chmielna 10 Gdańsk"}, {"n": "Il Panino", "a": "Stągiewna 1A", "w": "ca. 3 Min. zu Fuß ab Unterkunft", "h": "Di ab 15:00 bis 22:00", "r": "4,6 (630)", "d": ["Meeresfrüchte-Risotto", "Carbonara", "Wurst- und Käseplatte"], "t": "Öffnet erst um 15:00. Kinder bekommen Malblätter und ein Kinderset.", "q": "Il Panino Stągiewna 1A Gdańsk", "kid": true}, {"n": "Billy's American Restaurants", "a": "Chmielna 3/8", "w": "ca. 6 Min. zu Fuß ab Unterkunft", "h": "8:00–1:00", "r": "4,9 (17.642)", "d": ["Burger", "viele Saucen", "Frühstücksgerichte"], "t": "Schnell und unkompliziert.", "q": "Billy's American Restaurants Chmielna 3/8 Gdańsk"}], "di-abend": [{"n": "Restauracja Gdańska", "a": "Świętego Ducha 16/24", "w": "Weg in Google Maps prüfen", "h": "täglich 12:00–22:00", "r": "4,4 (1.780)", "d": ["Ente", "Vareniki (Teigtaschen)", "Kindermenü"], "t": "Das Lokal aus Ihrem Plan. Reservierung empfohlen. Durchschnitt etwa 48 PLN pro Gericht.", "q": "Restauracja Gdańska Świętego Ducha 16/24 Gdańsk"}, {"n": "Vis a Vis", "a": "Piwna 52/53", "w": "ca. 2 Min. zu Fuß ab Goldenem Tor", "h": "12:00–21:30", "r": "4,6 (384)", "d": ["Pierogi mit Ente", "Pierogi mit Rot- oder Rehwild", "süße Pierogi mit Weißkäse", "klassische Pierogi"], "t": "Kleines Lokal. Gäste loben die Pierogi und das dunkle Bier.", "q": "Vis a Vis Restauracja Piwna 52/53 Gdańsk"}, {"n": "MONO Kitchen", "a": "Piwna 28/31", "w": "ca. 2 Min. zu Fuß ab Goldenem Tor", "h": "täglich 8:00–24:00", "r": "4,6 (7.467)", "d": ["Entenbrühe", "Ente", "Tatar", "Pizza"], "t": "Vegetarisch und glutenfrei möglich. Reservierung empfohlen.", "q": "MONO Kitchen Piwna 28/31 Gdańsk"}, {"n": "Restauracja KOS", "a": "Piwna 9/10", "w": "ca. 2 Min. zu Fuß ab Goldenem Tor", "h": "12:00–21:00", "r": "4,4 (5.161)", "d": ["Ente", "Vareniki", "Ravioli", "Gnocchi"], "t": "Spielecke, Kindermenü und Hochstühle. Große Portionen, etwa 40–60 PLN pro Gericht.", "q": "Restauracja KOS Piwna 9/10 Gdańsk", "kid": true}], "mi-cafe": [{"n": "Fika", "a": "Szeroka 86/5", "w": "ca. 3 Min. zu Fuß ab Frauengasse", "h": "mittwochs 8:00–14:00", "r": "4,6 (1.552)", "d": ["Pierogi", "Pfannkuchen", "Kuchen", "Cappuccino mit Hafermilch"], "t": "Gemütlich, mit Jazzmusik. Passt auch als Frühstück.", "q": "Fika Szeroka 86 Gdańsk"}, {"n": "Kawiarnia Retro", "a": "Piwna 5/6", "w": "ca. 5 Min. zu Fuß ab Frauengasse", "h": "10:00–22:00", "r": "4,7 (3.384)", "d": ["Specialty-Kaffee (V60)", "polnischer Apfelkuchen", "Schokokuchen aus Buchweizen", "Haferbrei"], "t": "Englisch-viktorianisches Interieur. Nicht billig.", "q": "Kawiarnia Retro Piwna 5/6 Gdańsk"}, {"n": "Leń", "a": "Piwna 52/53", "w": "ca. 4 Min. zu Fuß ab Frauengasse", "h": "10:00–19:00", "r": "4,8 (2.022)", "d": ["Handfilterkaffee", "Kuchen und Tartes", "Granatapfel-Tarte", "Espresso-Cola"], "t": "Kaffeerösterei. Zum Kaffee gibt es Wasser.", "q": "Leń Piwna 52/53 Gdańsk"}], "mi-mittag": [{"n": "Pierogarnia Stary Młyn", "a": "Świętego Ducha 64", "w": "ca. 2 Min. zu Fuß ab Marienkirche", "h": "8:03–21:56", "r": "4,6 (17.243)", "d": ["ofengebackene Pierogi", "Pierogi ruskie (Quark und Kartoffel)", "Probierteller mit 9 Stück", "Suppen wie Żurek"], "t": "Mittags oft Warteschlange, laut Seite lichtet sie sich gegen 13:45. Einzelne Gäste warteten 45 Minuten. Mit dem Sołdek um 13:15 wird es knapp, kommen Sie früh oder wählen Sie ein anderes Lokal.", "q": "Pierogarnia Stary Młyn Świętego Ducha 64 Gdańsk"}, {"n": "Restauracja Gvara", "a": "Chlebnicka 48/51", "w": "ca. 1 Min. zu Fuß ab Marienkirche", "h": "Mi 12:00–22:00", "r": "4,6 (3.752)", "d": ["Schweinshaxe", "Garnelen", "Pizza", "Teigtaschen"], "t": "Direkt neben der Marienkirche. Der Service ist teils langsam.", "q": "Restauracja Gvara Chlebnicka 48/51 Gdańsk"}, {"n": "Piwnica Rajców", "a": "Długi Targ 44", "w": "ca. 2 Min. zu Fuß ab Marienkirche", "h": "Mi 11:00–22:00", "r": "4,5 (4.522)", "d": ["polnische Gerichte zum Hausbier", "mediterrane Karte", "Kindermenü"], "t": "Gewölbekeller unter dem Artushof mit eigener Brauerei und Terrasse.", "q": "Piwnica Rajców Długi Targ 44 Gdańsk", "kid": true}], "mi-abend": [{"n": "Chleb i Wino Chmielna", "a": "Chmielna 3/7", "w": "ca. 6 Min. zu Fuß ab Unterkunft", "h": "9:00–23:00", "r": "4,7 (12.762)", "d": ["Lachstatar", "Garnelen als Vorspeise", "Putenbrust", "Schwein mit Spargel"], "t": "Reservieren. Gäste berichten von langsamem Service. Donnerstag essen Sie im Schwesterlokal.", "q": "Chleb i Wino Chmielna 3/7 Gdańsk"}, {"n": "Billy's American Restaurants", "a": "Chmielna 3/8", "w": "ca. 6 Min. zu Fuß ab Unterkunft", "h": "8:00–1:00", "r": "4,9 (17.642)", "d": ["Burger", "viele Saucen", "Frühstücksgerichte"], "t": "Schnell und unkompliziert, gut für das Kind.", "q": "Billy's American Restaurants Chmielna 3/8 Gdańsk", "kid": true}, {"n": "Gdański Bowke", "a": "Długie Pobrzeże 11", "w": "ca. 6 Min. zu Fuß ab Unterkunft", "h": "11:00–22:00", "r": "4,5 (6.030)", "d": ["regionale Gerichte", "Hausbier Gdański Bowke"], "t": "Kurze Karte im Stil der Vorkriegszeit, direkt an der Mottlau.", "q": "Gdański Bowke Długie Pobrzeże 11 Gdańsk"}], "do-mittag": [{"n": "Bistro Bar Festival", "a": "Bohaterów Monte Cassino 2", "w": "ca. 3 Min. zu Fuß ab Bahnhof Sopot", "h": "11:00–18:00", "r": "4,6 (1.153)", "d": ["polnische Hausmannskost"], "t": "Günstig und schnell. Gäste sprechen von Essen wie aus der Kindheit.", "q": "Bistro Bar Festival Bohaterów Monte Cassino 2 Sopot"}, {"n": "Śliwka w Kompot", "a": "Bohaterów Monte Cassino 42", "w": "ca. 9 Min. zu Fuß ab Bahnhof Sopot", "h": "9:00–24:00", "r": "4,8 (15.747)", "d": ["Rinderbäckchen", "Rote-Bete-Carpaccio"], "t": "Sehr beliebt. Lange Schlange und Wartezeit beim Essen, früh kommen.", "q": "Śliwka w Kompot Bohaterów Monte Cassino 42 Sopot"}, {"n": "Błękitny Pudel", "a": "Bohaterów Monte Cassino 44", "w": "ca. 10 Min. zu Fuß ab Bahnhof Sopot", "h": "11:30–24:00", "r": "4,4 (5.883)", "d": ["Garnelen", "Pubküche"], "t": "Ältestes Pub in Sopot, etwas touristisch.", "q": "Błękitny Pudel Bohaterów Monte Cassino 44 Sopot"}], "do-kaffee": [{"n": "La Crema d'Italia", "a": "Bohaterów Monte Cassino 14", "w": "ca. 4 Min. zu Fuß ab Bahnhof Sopot", "h": "11:00–18:00", "r": "4,8 (1.494)", "d": ["Tiramisu", "Käsekuchen", "Eis", "Kaffee"], "t": "Stilvolles italienisches Café, englischsprachiges Personal.", "q": "La Crema d'Italia Cafe Bohaterów Monte Cassino 14 Sopot"}, {"n": "Cukiernia Sowa", "a": "Bohaterów Monte Cassino 19", "w": "ca. 5 Min. zu Fuß ab Bahnhof Sopot", "h": "9:00–18:00", "r": "4,2 (211)", "d": ["Trüffeltorte", "Orangendessert"], "t": "Klein, wenige Tische, draußen sitzt man auch.", "q": "Cukiernia Sowa Bohaterów Monte Cassino 19 Sopot"}, {"n": "Santa Cafe", "a": "Bohaterów Monte Cassino 38/5", "w": "ca. 8 Min. zu Fuß ab Bahnhof Sopot", "h": "11:00–21:00", "r": "4,8 (1.624)", "d": ["Käsekuchen", "Santa-Brownie"], "t": "Eingang im Hof, deshalb ruhiger.", "q": "Kawiarnia Santa Cafe Bohaterów Monte Cassino 38/5 Sopot"}], "do-abend": [{"n": "Chleb i Wino Stągiewna", "a": "Stągiewna 17", "w": "ca. 3 Min. zu Fuß ab Unterkunft", "h": "8:00–23:00", "r": "4,6 (15.480)", "d": ["Brot und Pasta aus eigener Herstellung", "Ente", "Tagliolini mit Garnelen und Chorizo", "Rinderbäckchen"], "t": "Das Lokal aus Ihrem Plan. Reservieren. Cocktails werden mit Trockeneis serviert.", "q": "Chleb i Wino Stągiewna 17 Gdańsk"}, {"n": "Chleb i Wino Na Wyspie", "a": "Stągiewna 27", "w": "ca. 3 Min. zu Fuß ab Unterkunft", "h": "9:00–23:00", "r": "4,5 (2.137)", "d": ["Steak auf heißem Stein", "gegrilltes Gemüse", "traditionelle polnische Gerichte"], "t": "Elegantes Schwesterlokal auf der Speicherinsel.", "q": "Chleb i Wino Na Wyspie Stągiewna 27 Gdańsk"}, {"n": "Il Panino", "a": "Stągiewna 1A", "w": "ca. 3 Min. zu Fuß ab Unterkunft", "h": "Do 15:00–22:00", "r": "4,6 (630)", "d": ["Meeresfrüchte-Risotto", "Carbonara", "Wurst- und Käseplatte"], "t": "Italienisch am Wasser. Kinder bekommen Malblätter und ein Kinderset.", "q": "Il Panino Stągiewna 1A Gdańsk", "kid": true}]};
+function mealHtml(k){
+  const o=MEALS[k]; if(!o) return '';
+  return `<details class="meal"><summary>${o.length} Vorschläge zur Wahl</summary>`
+   + o.map(x=>`<div class="opt"><div class="oh"><b>${x.n}</b>${x.kid?'<span class="chip">Kinder</span>':''}</div><div class="muted small">${x.a} · ${x.h} · Google ${x.r}</div><div class="way">${x.w}</div><div class="small"><b>Gern bestellt:</b> ${x.d.join(', ')}</div><div class="small muted">${x.t}</div><a class="go" href="${navUrl({p:x.q,m:'walking'})}" target="_blank" rel="noopener">Route starten · zu Fuß</a></div>`).join('')
+   + `<p class="small muted" style="margin:8px 0 0">Gerichte stammen aus Gästebewertungen und Restaurantseiten. Speisekarte und Preise vor Ort prüfen. Gehzeiten sind Schätzwerte.</p></details>`;
+}
+const FRUEH = [
+ {n:'Bistro Młyn',a:'Pszenna 5',min:1,q:'Bistro Młyn Pszenna 5 Gdańsk',h:'täglich 7:30–18:00',r:'4,6',t:'Polnisches Frühstück und Pizza. Spielecke und Kindermenü. Oft voll, der Service kann dauern.'},
+ {n:'Chleb i Wino Stągiewna',a:'Stągiewna 17',min:3,q:'Chleb i Wino Stągiewna 17 Gdańsk',h:'täglich 8:00–23:00',r:'4,6',t:'Frühstückset mit Saft und Kaffee laut einer Bewertung etwa 55 PLN. Dasselbe Haus wie am Donnerstagabend.'},
+ {n:'Fika',a:'Szeroka 86/5',min:9,q:'Fika Szeroka 86 Gdańsk',h:'8:00–18:00, mittwochs bis 14:00',r:'4,6',t:'Gemütlich, mit Pierogi, Pfannkuchen und Kuchen. Liegt am Mittwoch in der Nähe von Marienkirche und Krantor.'},
+ {n:'Balans Coffee',a:'Ogarna 123',min:11,q:'Balans Coffee Ogarna 123 Gdańsk',h:'täglich 8:00–16:00',r:'4,7',t:'Bagels und Omelettes, auch vegetarisch.'},
+ {n:'Doppio Club Cafe',a:'Ogarna 124',min:12,q:'Doppio Club Cafe Ogarna 124 Gdańsk',h:'Mo–Do 9:00–16:00, Fr–So bis 18:00',r:'4,9',t:'Süße und herzhafte Waffeln. Klein und beliebt.'}
+];
+function fruehCard(){
+  return `<div class="card"><h3>Frühstück in der Nähe</h3><p class="small muted" style="margin:0 0 4px">Gehzeit ab Pszenna 3, aus den Koordinaten berechnet. Zeiten und Bewertungen laut Google Maps.</p>`
+  + FRUEH.map(f=>`<div class="it" style="grid-template-columns:68px 1fr"><div class="mono" style="font-size:.88rem;color:var(--primary)">ca. ${f.min} Min.</div><div><div class="t">${f.n}</div><div class="muted small">${f.a} · ${f.h} · Google ${f.r}</div><div class="small">${f.t}</div><a class="go" href="${navUrl({p:f.q,m:'walking'})}" target="_blank" rel="noopener">Route starten · zu Fuß</a></div></div>`).join('')
+  + `</div>`;
+}
+const MODES = {walking:'zu Fuß',transit:'Bahn und Bus',driving:'Auto'};
+const navUrl = it => 'https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(it.p)+'&travelmode='+(it.m||'walking');
+
+function renderDay(){
+  const d = DAYS[cur];
+  let nextCard = ''; const frueh = (d.id==='mi'||d.id==='do') ? fruehCard() : '';
+  if(cur===dayIndexForToday()){
+    const now=new Date(); const hm=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+    const nx=d.items.find(i=>i.p && i.t>=hm);
+    if(nx) nextCard = `<div class="card next"><div class="chips"><span class="chip">Nächster Stopp · ${nx.t}</span></div><div style="font-weight:700;font-size:1.05rem">${nx.h}</div><a class="btn" style="margin-top:10px" href="${navUrl(nx)}" target="_blank" rel="noopener">Route starten · ${MODES[nx.m||'walking']}</a></div>`;
+  }
+  const tabs = DAYS.map((x,i)=>`<button class="tab" role="tab" aria-selected="${i===cur}" data-day="${i}" type="button"><b>${x.short}</b><span>${x.date}</span></button>`).join('');
+  const items = d.items.map(it=>`
+   <li class="it"><time>${it.t}</time><div>
+    <div class="chips"><span class="chip ${it.k==='essen'?'essen':''}">${TYPES[it.k]}</span>${it.opt?'<span class="chip opt">optional</span>':''}${it.cost?`<span class="chip cost">${it.cost}</span>`:''}</div>
+    ${it.p?`<a class="t" href="${navUrl(it)}" target="_blank" rel="noopener">${it.h}</a>`:`<div class="t">${it.h}</div>`}${it.n?`<div class="muted small">${it.n}</div>`:''}
+    ${it.w?`<div class="way">${it.w}</div>`:''}
+    ${it.chk?`<div class="check"><b>${it.lab||'Prüfen.'}</b> ${it.chk}</div>`:''}
+    ${it.p?`<a class="go" href="${navUrl(it)}" target="_blank" rel="noopener">Route starten · ${MODES[it.m||'walking']}</a>`:''}
+    ${it.meal?mealHtml(it.meal):''}
+   </div></li>`).join('');
+  $('#v-tage').innerHTML = `
+   <div class="tabs" role="tablist" aria-label="Reisetage">${tabs}</div>
+   <div class="card dayhead"><h2>${d.title}</h2><span class="wx">${d.wx}</span>
+    <p class="muted small" style="margin:10px 0 0">Verkehr: ${d.transport}</p></div>
+   ${nextCard}${frueh}<div class="card"><p class="small muted" style="margin:0 0 4px">Tippen Sie auf einen Stopp. Google Maps öffnet die Route von Ihrem aktuellen Standort.</p><ol class="tl">${items}</ol></div>
+   <div class="card alt"><h3>Wenn das Wetter nicht mitspielt</h3><div class="small">${d.alt}</div></div>
+   <div class="card"><h3>Karten</h3><div class="row" style="margin-top:8px">${mapsBtns(d.maps)}</div></div>
+   <div class="card"><h3>Tagesbudget für 4 Personen</h3>
+    <div class="mono" style="font-size:1.25rem;font-weight:500">${fmt(d.budget[0])}–${fmt(d.budget[1])} PLN</div>
+    <div class="muted small">${d.budgetNote}</div></div>`;
+}
+
+function renderVerkehr(){
+  $('#v-verkehr').innerHTML = `
+  <div class="card"><h2>Zu Fuß</h2><p style="margin:0">Dienstag und Mittwoch gehen Sie alles zu Fuß. Die Unterkunft liegt in der Altstadt.</p></div>
+  <div class="card"><h2>Bus und Tram</h2>
+   <dl class="kv"><dt>Einzelfahrt</dt><dd class="mono">4,80 PLN</dd><dt>75 Minuten</dt><dd class="mono">6 PLN</dd><dt>24 Stunden</dt><dd class="mono">22 PLN</dd></dl>
+   <p class="small muted">Richtpreise aus dem Plan. Kind: Ermäßigung prüfen.</p></div>
+  <div class="card"><h2>SKM nach Oliwa und Sopot</h2>
+   <p style="margin:0 0 8px">Strecke am Donnerstag: Śródmieście → Oliwa → Sopot → zurück. Tickets am Bahnsteig-Automaten (auch auf Englisch) oder in der App kaufen.</p>
+   <div class="check"><b>Ticket klären.</b> In Sopot gilt laut einer Quelle: Ticket für die Fahrtrichtung kaufen, Danzig oder Gdynia. Planwert 8,50 PLN je Fahrt und Person ist eher hoch angesetzt und dient als Puffer.</div></div>
+  <div class="card"><h2>Weg- und Fahrzeiten</h2><div class="tw"><table>
+   <thead><tr><th>Strecke</th><th>Dauer</th></tr></thead><tbody>
+    <tr><td>Flughafen ↔ Unterkunft (Taxi)</td><td>25–40 Min.</td></tr>
+    <tr><td>Danzig ↔ Sopot (SKM)</td><td>ca. 15 Min.</td></tr>
+    <tr><td>Danzig ↔ Oliwa (SKM)</td><td>ca. 15–25 Min.</td></tr>
+    <tr><td>Bahnhof Oliwa ↔ Park (zu Fuß)</td><td>12–15 Min.</td></tr>
+    <tr><td>Bahnhof Sopot ↔ Seebrücke (zu Fuß)</td><td>8–10 Min.</td></tr>
+    <tr><td>Zwischen den Altstadt-Stopps (zu Fuß)</td><td>1–8 Min.</td></tr></tbody></table></div>
+   <p class="small muted" style="margin-bottom:0">Schätzwerte. Der Button „Route starten“ zeigt in Google Maps die genaue Zeit ab Ihrem Standort.</p></div>
+  <div class="card"><h2>Flughafen</h2>
+   <dl class="kv"><dt>Dienstag</dt><dd>Taxi, Bolt oder Uber, etwa 40 Minuten</dd><dt>Freitag</dt><dd>Taxi 06:45, 25–40 Minuten, 60–130 PLN</dd></dl></div>
+  <div class="card"><h2>Apps</h2><div class="row">
+   <a class="btn ghost" href="https://jakdojade.pl" target="_blank" rel="noopener">Jakdojade</a>
+   <a class="btn ghost" href="https://www.skm.pkp.pl" target="_blank" rel="noopener">SKM Trójmiasto</a></div>
+   <p class="small muted" style="margin-bottom:0">Bolt und Uber für Taxifahrten und bei Regen.</p></div>`;
+}
+
+function renderBudget(){
+  const lo = DAYS.reduce((a,d)=>a+d.budget[0],0), hi = DAYS.reduce((a,d)=>a+d.budget[1],0);
+  let rate = 4.25; try{ const r=parseFloat(localStorage.getItem('danzig-rate')); if(r>0) rate=r }catch(e){}
+  $('#v-budget').innerHTML = `
+  <div class="card"><h2>Kosten für 4 Personen</h2><div class="tw"><table>
+   <thead><tr><th>Tag</th><th>von</th><th>bis</th></tr></thead>
+   <tbody>${DAYS.map(d=>`<tr><td>${d.short} ${d.date}</td><td>${fmt(d.budget[0])}</td><td>${fmt(d.budget[1])}</td></tr>`).join('')}</tbody>
+   <tfoot><tr><td>Gesamt (PLN)</td><td>${fmt(lo)}</td><td>${fmt(hi)}</td></tr></tfoot></table></div>
+   <p class="small muted" style="margin-bottom:0">Ohne Flug, Unterkunft, Souvenirs und Einkäufe. Alles sind Schätzwerte.</p></div>
+  <div class="card"><h2>In Euro</h2>
+   <label for="rate" class="small">Kurs: PLN je 1 EUR</label>
+   <div class="row" style="margin:6px 0 10px"><input id="rate" type="number" inputmode="decimal" step="0.01" min="1" value="${rate}">
+   <span class="small muted">Beispielkurs. Bitte aktuellen Kurs eintragen.</span></div>
+   <dl class="kv" id="eur"></dl></div>`;
+  const upd=()=>{
+    const r=parseFloat($('#rate').value); if(!(r>0)){ $('#eur').innerHTML='<dt>Hinweis</dt><dd>Bitte einen Kurs über 0 eintragen.</dd>'; return }
+    try{ localStorage.setItem('danzig-rate',String(r)) }catch(e){}
+    $('#eur').innerHTML = `<dt>Gesamt</dt><dd class="mono">${fmt(lo/r)}–${fmt(hi/r)} EUR</dd>
+     <dt>Pro Person</dt><dd class="mono">${fmt(lo/r/4)}–${fmt(hi/r/4)} EUR</dd>
+     <dt>Pro Tag, Mittel</dt><dd class="mono">${fmt((lo+hi)/2/4/r)} EUR</dd>
+     <dt>Beispiel 100 PLN</dt><dd class="mono">${fmt2(100/r)} EUR</dd>`;
+  };
+  $('#rate').oninput=upd; upd();
+}
+
+function renderCheck(){
+  $('#v-check').innerHTML = CHECKS.map(g=>{
+    const done = g.i.filter(([id])=>store[id]).length;
+    return `<div class="card"><div class="row" style="justify-content:space-between"><h2 style="margin:0">${g.g}</h2><span class="prog">${done}/${g.i.length}</span></div>
+     <div style="margin-top:6px">${g.i.map(([id,t])=>`<label class="ck"><input type="checkbox" data-ck="${id}" ${store[id]?'checked':''}><span>${t}</span></label>`).join('')}</div></div>`;
+  }).join('') + '<p class="small muted">Häkchen werden nur auf diesem Gerät gespeichert.</p>';
+}
+
+function show(tab){
+  $$('.view').forEach(v=>v.hidden = v.id!=='v-'+tab);
+  $$('.nav button').forEach(b=>{ if(b.dataset.tab===tab) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current') });
+  window.scrollTo(0,0);
+  try{ history.replaceState(null,'','#'+tab) }catch(e){}
+}
+
+document.addEventListener('click',e=>{
+  const n=e.target.closest('[data-tab]'); if(n){ show(n.dataset.tab); return }
+  const g=e.target.closest('[data-go]'); if(g){ cur=+g.dataset.go; renderDay(); show('tage'); return }
+  const d=e.target.closest('[data-day]'); if(d){ cur=+d.dataset.day; renderDay(); const t=$('#v-tage .tab[aria-selected="true"]'); if(t) t.focus(); }
+});
+document.addEventListener('change',e=>{
+  const c=e.target.closest('[data-ck]'); if(c){ store[c.dataset.ck]=c.checked; save(); renderCheck(); const again=$(`[data-ck="${c.dataset.ck}"]`); if(again) again.focus() }
+});
+
+$('#count').textContent = countdown();
+renderStart(); renderDay(); renderVerkehr(); renderBudget(); renderCheck();
+const h=(location.hash||'').replace('#',''); show(['start','tage','verkehr','budget','check'].includes(h)?h:'start');
+</script>
+</body>
+</html>
