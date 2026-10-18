@@ -45,6 +45,7 @@ header p{margin:6px 0 0;opacity:.88}
 
 main{padding-block:18px 8px}
 .view{display:flex;flex-direction:column;gap:14px}
+.view[hidden]{display:none}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
 .card h2{font-size:1.15rem;margin-bottom:8px}
 .card h3{font-size:1rem;margin-bottom:4px}
@@ -304,12 +305,12 @@ function renderStart(){
    <div class="row" style="margin-top:12px">
     <a class="btn" href="https://www.google.com/maps/search/?api=1&query=Pszenna+3+Gdansk" target="_blank" rel="noopener">Unterkunft in Karte</a>
     <button class="btn ghost" id="copyAddr" type="button">Adresse kopieren</button>
-    ${li>=0?`<a class="btn ghost" href="#tag-${li}">Heutiger Tag</a>`:''}
+    ${li>=0?`<button class="btn ghost" type="button" data-go="${li}">Heutiger Tag</button>`:''}
    </div>
    <div class="small muted" id="copyMsg" role="status" style="margin-top:6px"></div>
   </div>
   <div class="card"><h2>Die vier Tage</h2>
-   ${DAYS.map((d,i)=>`<a class="tab" style="display:block;width:100%;margin-bottom:6px;text-decoration:none" href="#tag-${i}"><b>${d.short} ${d.date} · ${d.title}</b><span>${d.items[0].t}–${d.items[d.items.length-1].t} · ${fmt(d.budget[0])}–${fmt(d.budget[1])} PLN</span></a>`).join('')}
+   ${DAYS.map((d,i)=>`<button class="tab" style="width:100%;margin-bottom:6px" type="button" data-go="${i}"><b>${d.short} ${d.date} · ${d.title}</b><span>${d.items[0].t}–${d.items[d.items.length-1].t} · ${fmt(d.budget[0])}–${fmt(d.budget[1])} PLN</span></button>`).join('')}
   </div>
   <div class="card"><h2>Noch zu erledigen</h2>
    ${DAYS.map(d=>`<p style="margin:0 0 6px"><b>${d.short} ${d.date}</b> · ${d.todo}</p>`).join('')}
@@ -380,7 +381,7 @@ function renderDay(){
     ${it.meal?mealHtml(it.meal):''}
    </div></li>`).join('');
   $('#v-tage').innerHTML = `
-   <a class="btn ghost" href="#start" style="align-self:flex-start">← Übersicht</a>
+   <button class="btn ghost" type="button" data-tab="start" style="align-self:flex-start">← Übersicht</button>
    <div class="tabs" role="tablist" aria-label="Reisetage">${tabs}</div>
    <div class="card dayhead"><h2>${d.title}</h2><span class="wx">${d.wx}</span>
     <p class="muted small" style="margin:10px 0 0">Verkehr: ${d.transport}</p></div>
@@ -460,7 +461,7 @@ function show(tab,hash){
 
 document.addEventListener('click',e=>{
   const n=e.target.closest('[data-tab]'); if(n){ show(n.dataset.tab); return }
-  const g=e.target.closest('[data-go]'); if(g){ cur=+g.dataset.go; renderDay(); show('tage'); return }
+  const g=e.target.closest('[data-go]'); if(g){ cur=+g.dataset.go; renderDay(); show('tage','tag-'+cur); return }
   const d=e.target.closest('[data-day]'); if(d){ cur=+d.dataset.day; renderDay(); try{ history.replaceState(null,'','#tag-'+cur) }catch(e){} const t=$('#v-tage .tab[aria-selected="true"]'); if(t) t.focus(); }
 });
 document.addEventListener('change',e=>{
