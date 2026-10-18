@@ -174,7 +174,7 @@ const DAYS = [
    wx:'11–15 °C, tagsüber teilweise sonnig.',
    transport:'Alles zu Fuß.', budget:[580,850], budgetNote:'Frühstück 100–150, Mittag 160–240, Museum 122 (mit Audioguides 170), Abendessen 180–260 PLN',
    items:[
-    {t:'09:00',k:'essen',h:'Frühstück nahe der Unterkunft'},
+    {t:'09:00',k:'essen',h:'Frühstück nahe der Unterkunft',meal:'mi-frueh',n:'Fünf Lokale zur Wahl, alle zu Fuß erreichbar.',cost:'100–150 PLN'},
     {t:'10:00',k:'sehen',h:'Marienkirche (Bazylika Mariacka)',w:'Weg ca. 8 Min. zu Fuß über die Grüne Brücke',p:'Bazylika Mariacka Gdańsk',m:'walking',n:'Eine der größten Backsteinkirchen der Welt. Optional Turm mit 408 Stufen, kostenpflichtig und wetterabhängig.',
       chk:'Öffnung werktags laut Google Maps 8:00–17:00. Turmpreise und Zeiten vor Ort klären.'},
     {t:'10:45',k:'sehen',h:'Frauengasse (Ulica Mariacka)',w:'Weg ca. 2 Min. zu Fuß',p:'Ulica Mariacka Gdańsk',m:'walking',n:'Historische Häuser und Bernsteingeschäfte. Kostenlos.'},
@@ -195,7 +195,7 @@ const DAYS = [
    transport:'SKM-Bahn und zu Fuß.', budget:[620,880],
    budgetNote:'Frühstück 100–150, Bahn bis 102, Mittag 160–230, Café 50–90, Abendessen 200–300 PLN',
    items:[
-    {t:'09:00',k:'essen',h:'Frühstück'},
+    {t:'09:00',k:'essen',h:'Frühstück',meal:'do-frueh',n:'Fünf Lokale zur Wahl, alle zu Fuß erreichbar.',cost:'100–150 PLN'},
     {t:'09:45',k:'weg',h:'Zu Fuß zum Bahnhof Gdańsk Śródmieście',p:'Gdańsk Śródmieście SKM',m:'walking',lab:'Hinweis.',chk:'Die SKM hält auch in Gdańsk Główny. Nehmen Sie den Bahnhof, der näher an der Unterkunft liegt, und vergleichen Sie beide in Google Maps.'},
     {t:'10:15',k:'bahn',h:'SKM nach Gdańsk Oliwa',w:'Fahrzeit ca. 15–25 Min.',p:'Gdańsk Oliwa SKM',m:'transit',chk:'Ticketpreis nicht bestätigt. Am Automaten oder in Jakdojade das passende Ticket wählen.'},
     {t:'10:45',k:'sehen',h:'Oliwa-Park (Park Oliwski)',w:'Vom Bahnhof Oliwa ca. 12–15 Min. zu Fuß',lab:'Hinweis.',chk:'Dieser Fußweg fehlt im Plan. Rechnen Sie mit dem Park ab etwa 11:00 und dem Zug nach Sopot gegen 12:30.',p:'Park Oliwski Gdańsk',m:'walking',n:'Gartenanlage mit Wasserflächen und alten Bäumen. Kostenlos.'},
@@ -348,12 +348,13 @@ function mealHtml(k){
    + `<p class="small muted" style="margin:8px 0 0">Gerichte stammen aus Gästebewertungen und Restaurantseiten. Speisekarte und Preise vor Ort prüfen. Gehzeiten sind Schätzwerte.</p></details>`;
 }
 const FRUEH = [
- {n:'Bistro Młyn',a:'Pszenna 5',min:1,q:'Bistro Młyn Pszenna 5 Gdańsk',h:'täglich 7:30–18:00',r:'4,6',t:'Polnisches Frühstück und Pizza. Spielecke und Kindermenü. Oft voll, der Service kann dauern.'},
- {n:'Chleb i Wino Stągiewna',a:'Stągiewna 17',min:3,q:'Chleb i Wino Stągiewna 17 Gdańsk',h:'täglich 8:00–23:00',r:'4,6',t:'Frühstückset mit Saft und Kaffee laut einer Bewertung etwa 55 PLN. Dasselbe Haus wie am Donnerstagabend.'},
- {n:'Fika',a:'Szeroka 86/5',min:9,q:'Fika Szeroka 86 Gdańsk',h:'8:00–18:00, mittwochs bis 14:00',r:'4,6',t:'Gemütlich, mit Pierogi, Pfannkuchen und Kuchen. Liegt am Mittwoch in der Nähe von Marienkirche und Krantor.'},
- {n:'Balans Coffee',a:'Ogarna 123',min:11,q:'Balans Coffee Ogarna 123 Gdańsk',h:'täglich 8:00–16:00',r:'4,7',t:'Bagels und Omelettes, auch vegetarisch.'},
- {n:'Doppio Club Cafe',a:'Ogarna 124',min:12,q:'Doppio Club Cafe Ogarna 124 Gdańsk',h:'Mo–Do 9:00–16:00, Fr–So bis 18:00',r:'4,9',t:'Süße und herzhafte Waffeln. Klein und beliebt.'}
+ {n:'Bistro Młyn',a:'Pszenna 5',min:1,d:['Polnisches Frühstück','Pizza','Kindermenü'],kid:true,q:'Bistro Młyn Pszenna 5 Gdańsk',h:'täglich 7:30–18:00',r:'4,6',t:'Polnisches Frühstück und Pizza. Spielecke und Kindermenü. Oft voll, der Service kann dauern.'},
+ {n:'Chleb i Wino Stągiewna',a:'Stągiewna 17',min:3,d:['Frühstückset mit Saft und Kaffee'],q:'Chleb i Wino Stągiewna 17 Gdańsk',h:'täglich 8:00–23:00',r:'4,6',t:'Frühstückset mit Saft und Kaffee laut einer Bewertung etwa 55 PLN. Dasselbe Haus wie am Donnerstagabend.'},
+ {n:'Fika',a:'Szeroka 86/5',min:9,d:['Pierogi','Pfannkuchen','Kuchen'],q:'Fika Szeroka 86 Gdańsk',h:'8:00–18:00, mittwochs bis 14:00',r:'4,6',t:'Gemütlich, mit Pierogi, Pfannkuchen und Kuchen. Liegt am Mittwoch in der Nähe von Marienkirche und Krantor.'},
+ {n:'Balans Coffee',a:'Ogarna 123',min:11,d:['Bagels','Omelettes, auch vegetarisch'],q:'Balans Coffee Ogarna 123 Gdańsk',h:'täglich 8:00–16:00',r:'4,7',t:'Bagels und Omelettes, auch vegetarisch.'},
+ {n:'Doppio Club Cafe',a:'Ogarna 124',min:12,d:['Süße und herzhafte Waffeln'],q:'Doppio Club Cafe Ogarna 124 Gdańsk',h:'Mo–Do 9:00–16:00, Fr–So bis 18:00',r:'4,9',t:'Süße und herzhafte Waffeln. Klein und beliebt.'}
 ];
+MEALS['mi-frueh']=MEALS['do-frueh']=FRUEH.map(f=>({n:f.n,a:f.a,w:'ca. '+f.min+' Min. zu Fuß ab Unterkunft',h:f.h,r:f.r,d:f.d,t:f.t,q:f.q,kid:f.kid}));
 function fruehCard(){
   return `<div class="card"><h3>Frühstück in der Nähe</h3><p class="small muted" style="margin:0 0 4px">Gehzeit ab Pszenna 3, aus den Koordinaten berechnet. Zeiten und Bewertungen laut Google Maps.</p>`
   + FRUEH.map(f=>`<div class="it" style="grid-template-columns:68px 1fr"><div class="mono" style="font-size:.88rem;color:var(--primary)">ca. ${f.min} Min.</div><div><div class="t">${f.n}</div><div class="muted small">${f.a} · ${f.h} · Google ${f.r}</div><div class="small">${f.t}</div><a class="go" href="${navUrl({p:f.q,m:'walking'})}" target="_blank" rel="noopener">Route starten · zu Fuß</a></div></div>`).join('')
@@ -364,7 +365,7 @@ const navUrl = it => 'https://www.google.com/maps/dir/?api=1&destination='+encod
 
 function renderDay(){
   const d = DAYS[cur];
-  let nextCard = ''; const frueh = (d.id==='mi'||d.id==='do') ? fruehCard() : '';
+  let nextCard = ''; const frueh = '';
   if(cur===dayIndexForToday()){
     const now=new Date(); const hm=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
     const nx=d.items.find(i=>i.p && i.t>=hm);
